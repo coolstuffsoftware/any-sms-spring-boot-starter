@@ -43,12 +43,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.collect.Lists;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import software.coolstuff.springframework.anysms.exception.SmsBillingException;
 import software.coolstuff.springframework.anysms.exception.SmsException;
@@ -76,12 +76,14 @@ class SmsServiceImpl implements SmsService {
 
   SmsServiceImpl(
       RestTemplateBuilder restTemplateBuilder,
-      ObjectMapper objectMapper) {
-    MappingJackson2XmlHttpMessageConverter mappingJackson2XmlHttpMessageConverter = new MappingJackson2XmlHttpMessageConverter(objectMapper);
-    mappingJackson2XmlHttpMessageConverter.setDefaultCharset(Charset.forName("ISO-8859-15"));
-    mappingJackson2XmlHttpMessageConverter.setSupportedMediaTypes(Lists.newArrayList(MediaType.APPLICATION_XML, MediaType.TEXT_HTML));
+      MappingJackson2XmlHttpMessageConverter mappingJackson2XmlHttpMessageConverter) {
+    ObjectMapper objectMapper = mappingJackson2XmlHttpMessageConverter.getObjectMapper();
+    objectMapper.registerModule(new JaxbAnnotationModule());
+    MappingJackson2XmlHttpMessageConverter customizedXmlHttpMessConverter = new MappingJackson2XmlHttpMessageConverter(mappingJackson2XmlHttpMessageConverter.getObjectMapper());
+    customizedXmlHttpMessConverter.setDefaultCharset(Charset.forName("ISO-8859-15"));
+    customizedXmlHttpMessConverter.setSupportedMediaTypes(Lists.newArrayList(MediaType.APPLICATION_XML, MediaType.TEXT_HTML));
     restTemplate = restTemplateBuilder
-        .messageConverters(mappingJackson2XmlHttpMessageConverter)
+        .messageConverters(customizedXmlHttpMessConverter)
         .additionalMessageConverters(new FormHttpMessageConverter())
         .rootUri(ROOT_URI)
         .build();
@@ -181,19 +183,19 @@ class SmsServiceImpl implements SmsService {
     private Float limit;
 
     public SmsStatus convert() {
-      val status = new SmsStatus();
-      status.setPhoneNumber(getNummer());
-      status.setMessageId(getMsgid());
-      status.setCosts(getPreis());
-      status.setBalance(getGuthaben());
-      status.setCreditLimit(getLimit());
-      return status;
+      return SmsStatus.builder()
+          .phoneNumber(getNummer())
+          .messageId(getMsgid())
+          .costs(getPreis())
+          .balance(getGuthaben())
+          .creditLimit(getLimit())
+          .build();
     }
   }
 
   @Getter
   @RequiredArgsConstructor
-  private static enum Error {
+  public static enum Error {
     OK(0),
     WRONG_USERNAME_OR_PASSWORD(-1, SmsWrongConfigurationException.class, "SmsException.wrongCredentials"),
     WRONG_IP(-2, SmsWrongConfigurationException.class, "SmsException.wrongIp"),

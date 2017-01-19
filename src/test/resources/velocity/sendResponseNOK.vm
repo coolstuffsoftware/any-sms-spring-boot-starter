@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE status SYSTEM "http://gateway.any-sms.de/gateway.dtd">
+<status>
+  <error>$!{error}</error>
+  <nummer>$!{nummer}</nummer>
+  <msgid>12345678</msgid>
+  <preis>0.0</preis>
+  <guthaben>$!{guthaben}</guthaben>
+  <limit>0.0</limit>
+</status>

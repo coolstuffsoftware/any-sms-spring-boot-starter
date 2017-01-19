@@ -17,12 +17,14 @@
 */
 package software.coolstuff.springframework.anysms.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
  * @author mufasa1976
  */
 @Data
+@Builder
 public class SmsStatus {
   private String phoneNumber;
   private Long messageId;

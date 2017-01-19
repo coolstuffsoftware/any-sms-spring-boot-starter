@@ -24,8 +24,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 
 import software.coolstuff.springframework.anysms.service.api.SmsService;
 
@@ -35,7 +34,7 @@ import software.coolstuff.springframework.anysms.service.api.SmsService;
 @Configuration
 @ConditionalOnClass({
     RestTemplateBuilder.class,
-    ObjectMapper.class
+    MappingJackson2XmlHttpMessageConverter.class
 })
 @ConditionalOnProperty(prefix = "any-sms", name = "username")
 @EnableConfigurationProperties(SmsServiceProperties.class)
@@ -45,8 +44,8 @@ public class SmsAutoConfiguration {
   @ConditionalOnMissingBean(SmsService.class)
   public SmsService smsService(
       RestTemplateBuilder restTemplateBuilder,
-      ObjectMapper objectMapper) {
-    return new SmsServiceImpl(restTemplateBuilder, objectMapper);
+      MappingJackson2XmlHttpMessageConverter mappingJackson2XmlHttpMessageConverter) {
+    return new SmsServiceImpl(restTemplateBuilder, mappingJackson2XmlHttpMessageConverter);
   }
 
 }

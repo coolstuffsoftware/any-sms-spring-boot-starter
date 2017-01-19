@@ -1,0 +1,5 @@
+any-sms:
+  username: 111111
+  password: s3cr3t
+  sender: +436641234567
+  default-gateway: standard
