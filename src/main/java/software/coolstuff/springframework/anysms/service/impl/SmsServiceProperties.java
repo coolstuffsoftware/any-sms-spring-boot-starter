@@ -20,13 +20,12 @@ package software.coolstuff.springframework.anysms.service.impl;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 import lombok.Data;
 import software.coolstuff.springframework.anysms.model.SmsGateway;
 
-/**
- * @author mufasa1976
- */
+@Validated
 @Data
 @ConfigurationProperties("any-sms")
 class SmsServiceProperties {

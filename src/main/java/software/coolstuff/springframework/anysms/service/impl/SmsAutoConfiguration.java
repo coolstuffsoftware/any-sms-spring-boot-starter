@@ -28,9 +28,6 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
 
 import software.coolstuff.springframework.anysms.service.api.SmsService;
 
-/**
- * @author mufasa1976
- */
 @Configuration
 @ConditionalOnClass({
     RestTemplateBuilder.class,
